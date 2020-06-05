@@ -18,13 +18,20 @@ public class Leilao implements Serializable {
 
     public void propoe(Lance lance) {
         double valorLance = lance.getValor();
-        if (valorLance > maiorLance) {
-            maiorLance = valorLance;
-        }
+        obterMaiorLance(valorLance);
+        obterMenorLance(valorLance);
+    }
+
+    private void obterMenorLance(double valorLance) {
         if (valorLance < menorlance){
             menorlance = valorLance;
         }
+    }
 
+    private void obterMaiorLance(double valorLance) {
+        if (valorLance > maiorLance) {
+            maiorLance = valorLance;
+        }
     }
 
     public String getDescricao() {
