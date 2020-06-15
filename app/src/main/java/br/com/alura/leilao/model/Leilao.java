@@ -1,7 +1,5 @@
 package br.com.alura.leilao.model;
 
-import android.support.annotation.NonNull;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,11 +38,14 @@ public class Leilao implements Serializable {
 
     private boolean lanceNaoValido(Lance lance) {
         double valorLance = lance.getValor();
-        if (lanceMaiorQueUltimoLance(valorLance)) return true;
+        if (lanceMenorQueUltimoLance(valorLance))
+            throw new RuntimeException("Lance foi menor que ultimo lance");
         if (!lances.isEmpty()) {
             Usuario usuarioNovo = lance.getUsuario();
-            if (usuarioForMesmoDoUltimo(usuarioNovo)) return true;
-            if (usuarioDeuCincoLances(usuarioNovo)) return true;
+            if (usuarioFoiMesmoDoUltimo(usuarioNovo))
+                throw new RuntimeException("Usuario foi mesmo do ultimo lance");
+            if (usuarioDeuCincoLances(usuarioNovo))
+                throw new RuntimeException("Usuario de mais de 5 lances");
         }
         return false;
     }
@@ -63,7 +64,7 @@ public class Leilao implements Serializable {
         return false;
     }
 
-    private boolean usuarioForMesmoDoUltimo(Usuario usuarioNovo) {
+    private boolean usuarioFoiMesmoDoUltimo(Usuario usuarioNovo) {
         Usuario ultimoUsuario = lances.get(0).getUsuario();
         if (usuarioNovo.equals(ultimoUsuario)) {
             return true;
@@ -71,7 +72,7 @@ public class Leilao implements Serializable {
         return false;
     }
 
-    private boolean lanceMaiorQueUltimoLance(double valorLance) {
+    private boolean lanceMenorQueUltimoLance(double valorLance) {
         if (maiorLance > valorLance) {
             return true;
         }

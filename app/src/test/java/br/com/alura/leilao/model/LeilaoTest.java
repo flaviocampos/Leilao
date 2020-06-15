@@ -1,5 +1,7 @@
 package br.com.alura.leilao.model;
 
+import android.util.Log;
+
 import org.junit.Test;
 
 import java.util.List;
@@ -47,16 +49,6 @@ public class LeilaoTest {
         assertEquals(400.0, maiorLance, DELTA);
     }
 
-    @Test
-    public void obterMaiorLancePropostasOrdemDecrescente() {
-
-        //Executar
-        LEILAO.propoe(new Lance(LUISA, 500.0));
-        LEILAO.propoe(new Lance(FLAVIO, 100.0));
-        final double maiorLance = LEILAO.getMaiorLance();
-        //Testar
-        assertEquals(500.0, maiorLance, DELTA);
-    }
 
     @Test
     public void obterMenorLance() {
@@ -153,19 +145,25 @@ public class LeilaoTest {
     @Test
     public void naoDeveAdicionarLanceQuandoForMenorQueOMaiorLance(){
         LEILAO.propoe(new Lance(FLAVIO,500.0));
-        LEILAO.propoe(new Lance(LUISA, 400.0));
+        try {
+            LEILAO.propoe(new Lance(LUISA, 400.0));
+        } catch (Exception e) {
+            assertEquals("Lance foi menor que ultimo lance",e.getMessage());
+        }
 
-        final int quantidadeLances = LEILAO.quantidadeDeLances();
-        assertEquals(1,quantidadeLances);
     }
 
     @Test
     public void naoDeveAdicionarLanceQuandoForMesmoUsuarioDoUltimoLance(){
         LEILAO.propoe(new Lance(FLAVIO, 500));
-        LEILAO.propoe(new Lance(new Usuario("Flavio"), 600));
 
-        final int quantidadeLances = LEILAO.quantidadeDeLances();
-        assertEquals(1,quantidadeLances);
+        try {
+            LEILAO.propoe(new Lance(new Usuario("Flavio"), 600));
+            fail("Usuario foi mesmo do ultimo lance");
+        } catch (Exception e) {
+            assertEquals("Usuario foi mesmo do ultimo lance",e.getMessage());
+        }
+
     }
 
     @Test
@@ -177,7 +175,6 @@ public class LeilaoTest {
 
         LEILAO.propoe(new Lance(FLAVIO, 100.0));
         LEILAO.propoe(new Lance(LUISA, 150.0));
-        LEILAO.propoe(new Lance(LUISA, 250.0));
         LEILAO.propoe(new Lance(FLAVIO, 300.0));
         LEILAO.propoe(new Lance(LUISA, 350.0));
         LEILAO.propoe(new Lance(FLAVIO, 400.0));
@@ -187,8 +184,14 @@ public class LeilaoTest {
         LEILAO.propoe(new Lance(FLAVIO, 600.0));
         LEILAO.propoe(new Lance(LUISA, 650.0));
 
-        final int quantidadeLances = LEILAO.quantidadeDeLances();
-        assertEquals(10,quantidadeLances);
+        try {
+            LEILAO.propoe(new Lance(FLAVIO, 700.0));
+            fail("Usuario de mais de 5 lances");
+        } catch (Exception e) {
+
+            assertEquals("Usuario de mais de 5 lances",e.getMessage());
+        }
+
 
     }
 }
