@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.util.List;
 
+import br.com.alura.leilao.builder.LeilaoBuilder;
+
 import static org.junit.Assert.*;
 
 public class LeilaoTest {
@@ -11,9 +13,9 @@ public class LeilaoTest {
     public static final double DELTA = 0.0001;
 
     private final Leilao LEILAO = new Leilao("MacBook Air 13 inc 8GB - SSD 128");
-    private final Usuario FLAVIO = new Usuario("Flavio Campos");
-    private final Usuario LUISA = new Usuario("Luísa Nader");
-    private final Usuario SIMONE = new Usuario("Simone Nader");
+    private final Usuario FLAVIO = new Usuario("Flavio");
+    private final Usuario LUISA = new Usuario("Luísa");
+    private final Usuario SIMONE = new Usuario("Simone");
 
 
     @Test
@@ -125,7 +127,7 @@ public class LeilaoTest {
     public void obterTresMaioresLances_QuandoRecebeMaisTresLances(){
         LEILAO.propoe(new Lance(LUISA,100));
         LEILAO.propoe(new Lance(FLAVIO,200.0));
-        LEILAO.propoe(new Lance(FLAVIO,300.0));
+        LEILAO.propoe(new Lance(new Usuario("Pedro"),300.0));
         LEILAO.propoe(new Lance(LUISA,400));
 
         List<Lance> tresMaioresLances = LEILAO.tresMaioresLances();
@@ -155,5 +157,38 @@ public class LeilaoTest {
 
         final int quantidadeLances = LEILAO.quantidadeDeLances();
         assertEquals(1,quantidadeLances);
+    }
+
+    @Test
+    public void naoDeveAdicionarLanceQuandoForMesmoUsuarioDoUltimoLance(){
+        LEILAO.propoe(new Lance(FLAVIO, 500));
+        LEILAO.propoe(new Lance(new Usuario("Flavio"), 600));
+
+        final int quantidadeLances = LEILAO.quantidadeDeLances();
+        assertEquals(1,quantidadeLances);
+    }
+
+    @Test
+    public void naoDeveAcionarLanceQuandoUsuarioDerCincoLances(){
+        /*Leilao console = new LeilaoBuilder("Console")
+                .lance(FLAVIO, 100.0)
+                .lance(LUISA, 200)
+                .build();*/
+
+        LEILAO.propoe(new Lance(FLAVIO, 100.0));
+        LEILAO.propoe(new Lance(LUISA, 150.0));
+        LEILAO.propoe(new Lance(LUISA, 250.0));
+        LEILAO.propoe(new Lance(FLAVIO, 300.0));
+        LEILAO.propoe(new Lance(LUISA, 350.0));
+        LEILAO.propoe(new Lance(FLAVIO, 400.0));
+        LEILAO.propoe(new Lance(LUISA, 450.0));
+        LEILAO.propoe(new Lance(FLAVIO, 500.0));
+        LEILAO.propoe(new Lance(LUISA, 550.0));
+        LEILAO.propoe(new Lance(FLAVIO, 600.0));
+        LEILAO.propoe(new Lance(LUISA, 650.0));
+
+        final int quantidadeLances = LEILAO.quantidadeDeLances();
+        assertEquals(10,quantidadeLances);
+
     }
 }
