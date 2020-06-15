@@ -77,16 +77,7 @@ public class LeilaoTest {
         assertEquals(100.0, menorlance, DELTA);
     }
 
-    @Test
-    public void obterMenorlancePropostasOrdemDecrescente() {
 
-        //Executar
-        LEILAO.propoe(new Lance(FLAVIO, 200.0));
-        LEILAO.propoe(new Lance(LUISA, 100.0));
-        final double menorlance = LEILAO.getMenorlance();
-        //Teste
-        assertEquals(100.0, menorlance, DELTA);
-    }
 
     @Test
     public void obterTresMaioresLancesQuandoPropostosTresLances() {
@@ -97,9 +88,72 @@ public class LeilaoTest {
 
         List<Lance> treisMaioresLances = LEILAO.tresMaioresLances();
         //Testar
-        assertEquals(3,treisMaioresLances.size());
+        assertEquals(3, treisMaioresLances.size());
         assertEquals(800, treisMaioresLances.get(0).getValor(), DELTA);
         assertEquals(300, treisMaioresLances.get(1).getValor(), DELTA);
         assertEquals(180, treisMaioresLances.get(2).getValor(), DELTA);
+    }
+
+    @Test
+    public void obterTresMaioresLances_QuandoNaoHaLances() {
+        List<Lance> tresMaioresLances  = LEILAO.tresMaioresLances();
+        assertEquals(0, tresMaioresLances.size(),DELTA);
+    }
+
+    @Test
+    public void obterTresMaioresLances_QuandoRecebeApenasUM(){
+        LEILAO.propoe(new Lance(FLAVIO,300.0));
+
+        List<Lance> tresMaioresLances = LEILAO.tresMaioresLances();
+
+        assertEquals(1,tresMaioresLances.size(),DELTA);
+        assertEquals(300.0,tresMaioresLances.get(0).getValor(),DELTA);
+    }
+    @Test
+    public void obterTresMaioresLances_QuandoRecebeApenasDois(){
+        LEILAO.propoe(new Lance(FLAVIO,300.0));
+        LEILAO.propoe(new Lance(LUISA,400));
+
+        List<Lance> tresMaioresLances = LEILAO.tresMaioresLances();
+
+        assertEquals(2,tresMaioresLances.size(),DELTA);
+        assertEquals(400.0,tresMaioresLances.get(0).getValor(),DELTA);
+        assertEquals(300.0,tresMaioresLances.get(1).getValor(),DELTA);
+    }
+
+    @Test
+    public void obterTresMaioresLances_QuandoRecebeMaisTresLances(){
+        LEILAO.propoe(new Lance(LUISA,100));
+        LEILAO.propoe(new Lance(FLAVIO,200.0));
+        LEILAO.propoe(new Lance(FLAVIO,300.0));
+        LEILAO.propoe(new Lance(LUISA,400));
+
+        List<Lance> tresMaioresLances = LEILAO.tresMaioresLances();
+
+        assertEquals(3,tresMaioresLances.size(),DELTA);
+        assertEquals(200.0,tresMaioresLances.get(2).getValor(),DELTA);
+        assertEquals(300.0,tresMaioresLances.get(1).getValor(),DELTA);
+        assertEquals(400.0,tresMaioresLances.get(0).getValor(),DELTA);
+    }
+
+    @Test
+    public  void deveDevolverValoresZeroParaMaiorLanceQuandoNaoTiverLances(){
+        final double maiorLance = LEILAO.getMaiorLance();
+        assertEquals(0.0, maiorLance,DELTA);
+    }
+
+    @Test
+    public  void deveDevolverValoresZeroParamenorLanceQuandoNaoTiverLances(){
+        final double menorlance = LEILAO.getMenorlance();
+        assertEquals(0.0,menorlance,DELTA);
+    }
+
+    @Test
+    public void naoDeveAdicionarLanceQuandoForMenorQueOMaiorLance(){
+        LEILAO.propoe(new Lance(FLAVIO,500.0));
+        LEILAO.propoe(new Lance(LUISA, 400.0));
+
+        final int quantidadeLances = LEILAO.quantidadeDeLances();
+        assertEquals(1,quantidadeLances);
     }
 }

@@ -38,9 +38,18 @@ public class ListaLeilaoActivity extends AppCompatActivity {
         Leilao console = new Leilao("Console");
         console.propoe(new Lance(new Usuario("Flavio Campos"), 200.00));
         console.propoe(new Lance(new Usuario("Luisa Nader"), 300.00));
+        console.propoe(new Lance(new Usuario("Simone Nader"), 600.00));
+
+        Leilao macBookAir = new Leilao("MacBook Air");
+        macBookAir.propoe(new Lance(new Usuario("Flavio Campos"), 4200.00));
+        macBookAir.propoe(new Lance(new Usuario("Luisa Nader"), 3300.00));
+
+        Leilao camber = new Leilao("Specialized Camber");
+        camber.propoe(new Lance(new Usuario("Flavio Campos"), 6200.00));
+
 
         return new ArrayList<>(Arrays.asList(
-                console
+                macBookAir,console, camber
         ));
     }
 
